@@ -1,23 +1,87 @@
 defmodule Swoosh.Gallery do
   @moduledoc ~S"""
-  Swoosh.Gallery is a module used to map a preview to a path in order to later
-  be exposed through Plug or generate docs with `mix swoosh.gen.gallery` task.
+  Swoosh.Gallery is a library to preview and display your Swoosh mailers to everyone,
+  either by exposing the previews on your application's router or publishing it on
+  your favorite static host solution.
 
-  ## Examples
+  ## Getting Started
 
-      defmodule MyApp.SwooshGallery do
+  You will a gallery module to organize all your previews, and implement the expected
+  callbacks on your mailer modules:
+
+      defmodule MyApp.Mailer.Gallery do
         use Swoosh.Gallery
 
-        preview("/welcome", MyApp.Emails.Welcome)
+        preview("/welcome", MyApp.Mailer.WelcomeMailer)
       end
 
-  Then in your router:
+      defmodule MyApp.Mailer.WelcomeMailer do
+        # the expected Swoosh / Phoenix.Swoosh code that you already have to deliver emails
+        use Phoenix.Swoosh, view: SampleWeb.WelcomeMailerView, layout: {MyApp.LayoutView, :email}
 
-      forward "/gallery", MyApp.SwooshGallery
+        def welcome(user) do
+          new()
+          |> from("noreply@sample.test")
+          |> to({user.name, user.email})
+          |> subject("Welcome to Sample App")
+          |> render_body("welcome.html", user: user)
+        end
 
-  Or, you can generate HTML pages from it:
+        # `preview/0` function that builds your email using fixture data
+        def preview do
+          welcome(%{email: "user@sample.test", name: "Test User!"})
+        end
 
-      mix swoosh.gallery.html --gallery MyApp.SwooshGallery --path "_build/emails"
+        # `preview_details/0` with some useful metadata about your mailer
+        def preview_details do
+          [
+            title: "Welcome to MyApp!",
+            description: "First email to welcome users into the platform"
+          ]
+        end
+      end
+
+  Then in your router, you can mount your Gallery to expose it to the web:
+
+      forward "/gallery", MyApp.Mailer.Gallery
+
+  Or, you can generate static web pages with all the previews from your gallery:
+
+      mix swoosh.gallery.html --gallery MyApp.Mailer.Gallery --path "_build/emails"
+
+  ### Generating preview data
+
+  Previews should be built using in memory fixture data and we do **not recommend** that you
+  reuse your application's code to query for existing data or generate files during runtime. The
+  `preview/0` can be invoked multiple times as you navigate through your gallery on your browser
+  when mounting it on the router or when using the `swoosh.gallery.html` task to generate the static
+  pages.
+
+      defmodule MyApp.Mailer.SendContractEmail do
+        def send_contract(user, blob) do
+          contract =
+            Swoosh.Attachment.new({:data, blob}, filename: "contract.pdf", content_type: "application/pdf")
+
+          new()
+          |> to({user.name, user.email})
+          |> subject("Here is your Contract")
+          |> attachment(contract)
+          |> render_body(:contract, user: user)
+        end
+
+        # Bad - invokes application code to query data and generate the PDF contents
+        def preview do
+          user = MyApp.Users.find_user("testuser@acme.com")
+          {:ok, blob} = MyApp.Contracts.build_contract(user)
+          build(user, blob)
+        end
+
+        # Good - uses in memory structs and existing fixtures
+        def preview do
+          blob = File.read!("#{Application.app_dir(:tiger, "my_app")}/fixtures/sample.pdf")
+          build(%User{}, blob)
+        end
+      end
   """
 
   defmacro __using__(_options) do
@@ -54,8 +118,14 @@ defmodule Swoosh.Gallery do
 
   ## Examples
 
-      preview("/welcome", MyApp.Emails.Welcome)
+      defmodule MyApp.Mailer.Gallery do
+        use Swoosh.Gallery
 
+        preview "/welcome", MyApp.Emails.Welcome
+        preview "/account-confirmed", MyApp.Emails.AccountConfirmed
+        preview "/password-reset", MyApp.Emails.PasswordReset
+
+      end
   """
   @spec preview(String.t(), module()) :: no_return()
   defmacro preview(path, module) do
@@ -74,14 +144,20 @@ defmodule Swoosh.Gallery do
   end
 
   @doc """
-  Defines a scope in which previews can be nested. Each group needs a path and a `:title`
-  option.
+  Defines a scope in which previews can be nested when rendered on your gallery.
+  Each group needs a path and a `:title` option.
 
   ## Example
 
-      group "/onboarding", title: "Onboarding Emails" do
-        preview "/welcome", MyApp.Emails.Welcome
-        preview "/account-confirmed", MyApp.Emails.AccountConfirmed
+      defmodule MyApp.Mailer.Gallery do
+        use Swoosh.Gallery
+
+        group "/onboarding", title: "Onboarding Emails" do
+          preview "/welcome", MyApp.Emails.Welcome
+          preview "/account-confirmed", MyApp.Emails.AccountConfirmed
+        end
+
+        preview "/password-reset", MyApp.Emails.PasswordReset
       end
 
   ## Options
@@ -111,9 +187,8 @@ defmodule Swoosh.Gallery do
     end
   end
 
-  @doc ~S"""
-  Evaluates a preview. It loads the results of email_mfa into the email property.
-  """
+  # Evaluates a preview. It loads the results of email_mfa into the email property.
+  @doc false
   @spec eval_preview(%{:email_mfa => {module(), atom(), list()}}) :: map()
   def eval_preview(%{email: _email} = preview), do: preview
 
@@ -121,9 +196,8 @@ defmodule Swoosh.Gallery do
     Map.put(preview, :email, apply(module, fun, opts))
   end
 
-  @doc ~S"""
-  Evaluates a preview and reads the attachment at a given index position.
-  """
+  # Evaluates a preview and reads the attachment at a given index position.
+  @doc false
   @spec read_email_attachment_at(%{email_mfa: {atom, atom, list}}, integer()) ::
           {:error, :invalid_attachment | :not_found}
           | {:ok, %{content_type: String.t(), data: any}}
@@ -177,6 +251,7 @@ defmodule Swoosh.Gallery do
     raise ArgumentError, "router paths must be strings, got: #{inspect(path)}"
   end
 
+  @doc false
   def build_preview_path(nil, path), do: path
   def build_preview_path(group, path), do: "#{group}.#{path}"
 end

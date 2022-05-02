@@ -1,6 +1,7 @@
 defmodule Swoosh.Gallery.Plug do
   @moduledoc """
-  Plug that serves pages useful for previewing the gallery of emails in development.
+  Plug to mount a `Swoosh.Gallery` into an existing Phoenix/Plug application. Gallery themselves
+  will forward `init/1` and `call/2` to this dmoule, so users don't need to use it directly.
 
   ## Examples
 

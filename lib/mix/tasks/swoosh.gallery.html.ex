@@ -1,6 +1,28 @@
 defmodule Mix.Tasks.Swoosh.Gallery.Html do
   @moduledoc """
-  Serialize the given Swoosh.Gallery module and outputs HTML files to a folder.
+  Generate static files from a `Swoosh.Gallery` module that can be distributed and
+  hosted without your application's code, on places like Amazon S3 or GitHub/GitLab Pages.
+
+  ## Example
+
+      mix swoosh.gallery.html --gallery Sample.Mailer.Gallery --path /tmp/emails
+      * creating /tmp/emails
+      * creating /tmp/emails/index.html
+      * creating /tmp/emails/notifications.new_follower.html
+      * creating /tmp/emails/notifications.new_follower/preview.html
+      * creating /tmp/emails/notifications.new_message.html
+      * creating /tmp/emails/notifications.new_message/preview.html
+      * creating /tmp/emails/email_with_attachment.html
+      * creating /tmp/emails/email_with_attachment/preview.html
+      * creating /tmp/emails/email_with_attachment/attachments/0/file.pdf
+      * creating /tmp/emails/welcome_users.html
+      * creating /tmp/emails/welcome_users/preview.html
+
+  ## Command line options
+
+    * `-g`, `--gallery` - the gallery that will be used
+    * `-p`, `--path` - path where the static files should be generated
+
   """
   use Mix.Task
   require Mix.Generator

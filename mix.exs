@@ -28,8 +28,9 @@ defmodule SwooshGallery.MixProject do
 
   defp deps do
     [
-      {:swoosh, "~> 1.5"},
       {:plug_cowboy, ">= 1.0.0"},
+      {:swoosh, "~> 1.5"},
+      {:ex_doc, "~> 0.21", only: [:dev, :test], runtime: false},
       {:hackney, "~> 1.9", only: [:test]},
       {:tailwind, "~> 0.1", only: [:dev, :test]}
     ]
@@ -37,6 +38,7 @@ defmodule SwooshGallery.MixProject do
 
   defp docs do
     [
+      main: "Swoosh.Gallery",
       source_ref: "v#{@version}",
       source_url: "https://github.com/remoteoss/swoosh_gallery"
     ]
