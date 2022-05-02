@@ -2,6 +2,8 @@
 
 Preview and display your Swoosh mailers to everyone. 
 
+![](assets/docs/screenshot.png)
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
@@ -19,10 +21,12 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at <https://hexdocs.pm/swoosh_gallery>.
 
-## Screenshot
+## Sample application
 
-![](assets/docs/screenshot.png)
+You can see Swoosh.Gallery in action with the Phoenix app included on `./sample`:
 
+1. Run `mix do deps.get, phx.server`
+2. Go to `http://localhost:4000/dev/emails`
 ## Contributing
 
 1. Download the project.
