@@ -1,3 +1,22 @@
-<h1>Welcome to Sample, <%= @user.name %>!</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p>This is a sample email that is delivered when a person first join the platform.</p>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome!</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="flex items-center justify-center py-32 p-5 bg-blue-100 min-w-screen">
+    <div class="max-w-xl p-8 text-center text-gray-800 bg-white shadow-xl rounded-2xl">
+      <h3 class="text-2xl">Welcome to Sample, <%= @user.name %>!</h3>
+      <p class="mt-4">This is a sample email that is delivered when a person first join the platform.</p>
+      <p class="mt-4">
+        <a class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium rounded shadow-md">Get started with the app</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

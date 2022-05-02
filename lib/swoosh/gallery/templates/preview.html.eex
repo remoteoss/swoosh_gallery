@@ -1,36 +1,36 @@
 <!-- preview -->
 <h1 class="text-2xl font-semibold text-gray-900">
-  Preview: <%=  @preview.preview_details.title %>
+  Preview: <%= @preview.preview_details.title %>
 </h1>
 
 <div class="bg-white shadow overflow-hidden sm:rounded-lg mt-5">
-  <div class="px-4 py-5 sm:px-6">
+  <div class="p-4">
     <p class="max-w-2xl text-sm text-gray-500 leading-6">
       <%= @preview.preview_details.description %>
     </p>
   </div>
-  <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+  <div class="border-t border-gray-200">
     <dl class="sm:divide-y sm:divide-gray-200">
-      <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+      <div class="p-4 sm:grid sm:grid-cols-3">
         <dt class="text-sm font-medium text-gray-500">Subject</dt>
         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
           <%= @preview.email.subject %>
         </dd>
       </div>
-      <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+      <div class="p-4 sm:grid sm:grid-cols-3">
         <dt class="text-sm font-medium text-gray-500">From</dt>
         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
           <%= render_recipient(@preview.email.from) %>
         </dd>
       </div>
-      <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+      <div class="p-4 sm:grid sm:grid-cols-3">
         <dt class="text-sm font-medium text-gray-500">To</dt>
         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
           <%= render_recipient(@preview.email.to) %>
         </dd>
       </div>
       <%= if cc = render_recipient(@preview.email.cc) do %>
-        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <div class="p-4 sm:grid sm:grid-cols-3">
           <dt class="text-sm font-medium text-gray-500">CC</dt>
           <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
             <%= cc %>
@@ -38,7 +38,7 @@
         </div>
       <% end %>
       <%= if bcc = render_recipient(@preview.email.bcc) do %>
-        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <div class="p-4 sm:grid sm:grid-cols-3">
           <dt class="text-sm font-medium text-gray-500">BCC</dt>
           <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
             <%= bcc %>
@@ -47,7 +47,7 @@
       <% end %>
 
       <%= if Enum.any?(@preview.email.attachments) do %>
-        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <div class="p-4 sm:grid sm:grid-cols-3">
           <dt class="text-sm font-medium text-gray-500">Attachments</dt>
           <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
             <ul role="list" class="border border-gray-200 rounded-md divide-y divide-gray-200">
@@ -91,7 +91,7 @@
 </div>
 <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative mt-2">
   <iframe x-ref="iframe" title="Email HTML preview" aria-label="Email HTML preview" name="frame-html"
-    class="w-full rounded-lg overflow-hidden sm:rounded-r-none" style="height: 100vh"
+    class="w-full rounded-lg overflow-hidden sm:rounded-r-none" style="height: 70vh"
     src="<%= preview_path(@preview, @base_path, path: "/preview.html") %>"></iframe>
 </div>
 <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 my-4">

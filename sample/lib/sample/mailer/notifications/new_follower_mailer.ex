@@ -5,11 +5,11 @@ defmodule Sample.Mailer.Notifications.NewFollowerMailer do
     new()
     |> from("noreply@sample.test")
     |> to({user.name, user.email})
-    |> subject("Great!, #{follower.name} is following you")
+    |> subject("Great! #{follower.name} is following you")
     |> render_body("new_follower.html", user: user, follower: follower)
   end
 
-  def preview, do: welcome(%{email: "user@sample.test", name: "Test User!"}, %{name: "The Follower"})
+  def preview, do: welcome(%{email: "user@sample.test", name: "Test User!"}, %{name: "Another User"})
 
   def preview_details do
     [

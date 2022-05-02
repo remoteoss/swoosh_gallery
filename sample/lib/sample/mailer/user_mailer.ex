@@ -5,15 +5,15 @@ defmodule Sample.Mailer.UserMailer do
     new()
     |> from("noreply@sample.test")
     |> to({user.name, user.email})
-    |> subject("Welcome to Sample App")
+    |> subject("Welcome to Sample App!")
     |> render_body("welcome.html", user: user)
   end
 
-  def preview, do: welcome(%{email: "user@sample.test", name: "Test User!"})
+  def preview, do: welcome(%{email: "user@sample.test", name: "Test User"})
 
   def preview_details do
     [
-      title: "Welcome to Sample",
+      title: "Welcome Email",
       description: "First email to welcome users into the platform"
     ]
   end
