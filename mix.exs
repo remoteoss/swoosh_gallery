@@ -7,12 +7,13 @@ defmodule SwooshGallery.MixProject do
     [
       app: :swoosh_gallery,
       version: @version,
-      description: "",
+      description: "Preview and display your Swoosh mailers to everyone",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      package: package()
+      package: package(),
+      docs: docs()
     ]
   end
 
@@ -37,7 +38,7 @@ defmodule SwooshGallery.MixProject do
   defp docs do
     [
       source_ref: "v#{@version}",
-      source_url: "https://github.com/remoteoss/swoosh_gallery",
+      source_url: "https://github.com/remoteoss/swoosh_gallery"
     ]
   end
 
