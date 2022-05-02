@@ -10,15 +10,25 @@ defmodule Mix.Tasks.Swoosh.Gallery.HtmlTest do
   end
 
   defp sorted_ls!(path) do
-    path |> File.ls!() |> Enum.sort()
+    path
+    |> File.ls!()
+    |> Enum.sort()
   end
 
   test "creates the html files", %{tmp_dir: tmp_dir} do
     run_task(Support.Gallery, tmp_dir)
     assert File.dir?(tmp_dir)
-    assert sorted_ls!(tmp_dir) == ["index.html", "reset_password", "welcome"]
-    assert sorted_ls!("#{tmp_dir}/reset_password") == ["index.html", "preview.html"]
-    assert sorted_ls!("#{tmp_dir}/welcome") == ["attachments", "index.html", "preview.html"]
+
+    assert sorted_ls!(tmp_dir) == [
+             "index.html",
+             "reset_password",
+             "reset_password.html",
+             "welcome",
+             "welcome.html"
+           ]
+
+    assert sorted_ls!("#{tmp_dir}/reset_password") == ["preview.html"]
+    assert sorted_ls!("#{tmp_dir}/welcome") == ["attachments", "preview.html"]
     assert sorted_ls!("#{tmp_dir}/welcome/attachments") == ["0"]
     assert sorted_ls!("#{tmp_dir}/welcome/attachments/0") == ["my_file.txt"]
   end
@@ -34,13 +44,13 @@ defmodule Mix.Tasks.Swoosh.Gallery.HtmlTest do
     test "has links to the previews", %{tmp_dir: tmp_dir} do
       run_task(Support.Gallery, tmp_dir)
       contents = File.read!("#{tmp_dir}/index.html")
-      assert contents =~ "a href=\"./reset_password/index.html\""
-      assert contents =~ "a href=\"./welcome/index.html\""
+      assert contents =~ "a href=\"./reset_password.html\""
+      assert contents =~ "a href=\"./welcome.html\""
     end
 
     test "accessing a preview lists the basic informations", %{tmp_dir: tmp_dir} do
       run_task(Support.Gallery, tmp_dir)
-      contents = File.read!("#{tmp_dir}/welcome/index.html")
+      contents = File.read!("#{tmp_dir}/welcome.html")
       assert contents =~ "Welcome"
       assert contents =~ "Sends a warm welcome to the user"
       assert contents =~ "attachments: yes"
@@ -48,7 +58,7 @@ defmodule Mix.Tasks.Swoosh.Gallery.HtmlTest do
 
     test "accessing a preview shows the email as text", %{tmp_dir: tmp_dir} do
       run_task(Support.Gallery, tmp_dir)
-      contents = File.read!("#{tmp_dir}/reset_password/index.html")
+      contents = File.read!("#{tmp_dir}/reset_password.html")
       assert contents =~ "Reset Password"
       assert contents =~ "Sends instructions on how to reset password"
       assert contents =~ "passwords: yes"

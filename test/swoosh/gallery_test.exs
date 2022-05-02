@@ -2,6 +2,10 @@ defmodule Swoosh.GalleryTest do
   use ExUnit.Case
   use Plug.Test
 
+  alias Support.Router
+
+  Router.init([])
+
   describe "previews/0" do
     test "returns the list of previews" do
       assert previews = Support.Gallery.previews()
@@ -13,8 +17,9 @@ defmodule Swoosh.GalleryTest do
                    tags: [passwords: "yes"],
                    title: "Reset Password"
                  },
-                 path: "/reset_password",
-                 email_mfa: {Support.Emails.ResetPasswordEmail, :preview, []}
+                 path: "reset_password",
+                 email_mfa: {Support.Emails.ResetPasswordEmail, :preview, []},
+                 group: nil
                },
                %{
                  preview_details: %{
@@ -22,16 +27,13 @@ defmodule Swoosh.GalleryTest do
                    tags: [attachments: "yes"],
                    title: "Welcome"
                  },
-                 path: "/welcome",
-                 email_mfa: {Support.Emails.WelcomeEmail, :preview, []}
+                 path: "welcome",
+                 email_mfa: {Support.Emails.WelcomeEmail, :preview, []},
+                 group: nil
                }
              ] == previews
     end
   end
-
-  alias Support.Router
-
-  Router.init([])
 
   describe "Gallery plug" do
     test "lists preview titles" do
