@@ -1,0 +1,3 @@
+<h1>Welcome to Sample, <%= @user.name %>!</h1>
+
+<p>This is a sample email that is delivered when a person first join the platform.</p>

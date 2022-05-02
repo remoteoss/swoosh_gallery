@@ -1,0 +1,103 @@
+<!-- preview -->
+<h1 class="text-2xl font-semibold text-gray-900">
+  Preview: <%=  @preview.preview_details.title %>
+</h1>
+
+<div class="bg-white shadow overflow-hidden sm:rounded-lg mt-5">
+  <div class="px-4 py-5 sm:px-6">
+    <p class="max-w-2xl text-sm text-gray-500 leading-6">
+      <%= @preview.preview_details.description %>
+    </p>
+  </div>
+  <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+    <dl class="sm:divide-y sm:divide-gray-200">
+      <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt class="text-sm font-medium text-gray-500">Subject</dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+          <%= @preview.email.subject %>
+        </dd>
+      </div>
+      <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt class="text-sm font-medium text-gray-500">From</dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+          <%= render_recipient(@preview.email.from) %>
+        </dd>
+      </div>
+      <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt class="text-sm font-medium text-gray-500">To</dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+          <%= render_recipient(@preview.email.to) %>
+        </dd>
+      </div>
+      <%= if cc = render_recipient(@preview.email.cc) do %>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">CC</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= cc %>
+          </dd>
+        </div>
+      <% end %>
+      <%= if bcc = render_recipient(@preview.email.bcc) do %>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">BCC</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= bcc %>
+          </dd>
+        </div>
+      <% end %>
+
+      <%= if Enum.any?(@preview.email.attachments) do %>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Attachments</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <ul role="list" class="border border-gray-200 rounded-md divide-y divide-gray-200">
+              <%= for {attachment, index} <- Enum.with_index(@preview.email.attachments) do %>
+                <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                  <div class="w-0 flex-1 flex items-center">
+                    <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd"
+                        d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <span class="ml-2 flex-1 w-0 truncate">
+                      <%= attachment.filename %>
+                    </span>
+                  </div>
+                  <div class="ml-4 flex-shrink-0">
+                    <a href="<%= preview_path(@preview, @base_path, path: "/attachments/#{index}/#{attachment.filename}") %>"
+                      class="font-medium text-indigo-600 hover:text-indigo-500" target="_blank"> Download
+                    </a>
+                  </div>
+                </li>
+                <% end %>
+            </ul>
+          </dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <%= if @preview.preview_details.tags != [] do %>
+      <div class="border-t border-gray-200 p-4">
+        <%= for {name, value} <- @preview.preview_details.tags, {bg_color, text_color} = to_tag_color(name) do %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium <%= bg_color %> <%= text_color %>"> <%= "#{name}: #{value}" %> </span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 my-4">
+  <h1 class="text-2xl font-semibold text-gray-900">HTML Body Preview</h1>
+</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative mt-2">
+  <iframe x-ref="iframe" title="Email HTML preview" aria-label="Email HTML preview" name="frame-html"
+    class="w-full rounded-lg overflow-hidden sm:rounded-r-none" style="height: 100vh"
+    src="<%= preview_path(@preview, @base_path, path: "/preview.html") %>"></iframe>
+</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 my-4">
+  <h1 class="text-2xl font-semibold text-gray-900">Text Body Preview</h1>
+</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative mt-2">
+  <pre
+    class="bg-white p-4 rounded-lg sm:rounded-r-none whitespace-pre-line"><%= @preview.email.text_body %></pre>
+</div>

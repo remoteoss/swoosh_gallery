@@ -1,0 +1,36 @@
+<!-- table -->
+<div class="pb-4">
+  <h1 class="text-2xl font-semibold text-gray-900"><%= @title %></h1>
+
+  <div class="flex flex-col mt-5">
+    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tags</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <%= for preview <- @previews do %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <a href="<%= preview_path(preview, @base_path, format: @format) %>" class="text-sm font-medium text-gray-800 hover:text-indigo-700">
+                <%= preview.preview_details.title %>
+              </a>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500"><%= preview.preview_details.description %></td>
+            <td class="px-6 py-4 text-sm text-gray-500 space-y-1">
+              <%= for {name, value} <- preview.preview_details.tags, {bg_color, text_color} = to_tag_color(name) do %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium <%= bg_color %> <%= text_color %>"><%= "#{name}: #{value}" %></span>
+              <% end %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

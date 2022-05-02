@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title><%= @email.subject %></title>
+    <style>
+    html {
+      background-color: #fff;
+      outline: 1px solid red;
+      padding: 54px;
+    }
+
+    body {
+      font-family: sans-serif;
+      font-size: 18px;
+    }
+    </style>
+  </head>
+  <body>
+    <%= @inner_content %>
+  </body>
+</html>
