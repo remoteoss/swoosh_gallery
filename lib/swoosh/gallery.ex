@@ -131,16 +131,14 @@ defmodule Swoosh.Gallery do
   defmacro preview(path, module) do
     path = validate_path(path)
     module = Macro.expand(module, __ENV__)
-    preview_details = Macro.escape(eval_preview_details(module))
+    validate_preview_details!(module)
 
     quote do
-      @external_resource List.to_string(unquote(module).module_info(:compile)[:source])
-
       @previews %{
         group: @group_path,
         path: build_preview_path(@group_path, unquote(path)),
         email_mfa: {unquote(module), :preview, []},
-        preview_details: unquote(preview_details)
+        details_mfa: {unquote(module), :preview_details, []}
       }
     end
   end
@@ -194,8 +192,26 @@ defmodule Swoosh.Gallery do
   @spec eval_preview(%{:email_mfa => {module(), atom(), list()}}) :: map()
   def eval_preview(%{email: _email} = preview), do: preview
 
-  def eval_preview(%{email_mfa: {module, fun, opts}} = preview) do
+  def eval_preview(preview) do
+    preview
+    |> eval_email()
+    |> eval_details()
+  end
+
+  defp eval_email(%{email_mfa: {module, fun, opts}} = preview) do
     Map.put(preview, :email, apply(module, fun, opts))
+  end
+
+  def eval_details(%{preview_details: _details} = preview), do: preview
+
+  def eval_details(%{details_mfa: {module, fun, opts}} = preview) do
+    Map.put(preview, :preview_details, validate_preview_details!(module, fun, opts))
+  end
+
+  def eval_details(previews) when is_list(previews) do
+    Enum.map(previews, fn %{details_mfa: _mfa} = preview ->
+      eval_details(preview)
+    end)
   end
 
   # Evaluates a preview and reads the attachment at a given index position.
@@ -225,9 +241,9 @@ defmodule Swoosh.Gallery do
     end
   end
 
-  defp eval_preview_details(module) do
+  defp validate_preview_details!(module, fun \\ :preview_details, opts \\ []) do
     module
-    |> apply(:preview_details, [])
+    |> apply(fun, opts)
     |> Keyword.validate!([:title, :description, tags: []])
     |> Map.new()
     |> tap(&ensure_title!/1)
