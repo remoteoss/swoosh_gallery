@@ -134,6 +134,8 @@ defmodule Swoosh.Gallery do
     preview_details = Macro.escape(eval_preview_details(module))
 
     quote do
+      @external_resource List.to_string(unquote(module).module_info(:compile)[:source])
+
       @previews %{
         group: @group_path,
         path: build_preview_path(@group_path, unquote(path)),
