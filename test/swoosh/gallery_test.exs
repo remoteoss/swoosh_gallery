@@ -12,21 +12,13 @@ defmodule Swoosh.GalleryTest do
 
       assert [
                %{
-                 preview_details: %{
-                   description: "Sends instructions on how to reset password",
-                   tags: [passwords: "yes"],
-                   title: "Reset Password"
-                 },
+                 details_mfa: {Support.Emails.ResetPasswordEmail, :preview_details, []},
                  path: "reset_password",
                  email_mfa: {Support.Emails.ResetPasswordEmail, :preview, []},
                  group: nil
                },
                %{
-                 preview_details: %{
-                   description: "Sends a warm welcome to the user",
-                   tags: [attachments: "yes"],
-                   title: "Welcome"
-                 },
+                 details_mfa: {Support.Emails.WelcomeEmail, :preview_details, []},
                  path: "welcome",
                  email_mfa: {Support.Emails.WelcomeEmail, :preview, []},
                  group: nil
