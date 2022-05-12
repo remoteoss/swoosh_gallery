@@ -27,6 +27,19 @@ You can see Swoosh.Gallery in action with the Phoenix app included on `./sample`
 
 1. Run `mix do deps.get, phx.server`
 2. Go to `http://localhost:4000/dev/emails`
+
+
+### Static gallery
+
+You can also generate static HTML files for you Gallery. This is useful when you want to expose the gallery without the need of a server.
+
+```bash
+mix swoosh.gallery.html --gallery Sample.Gallery --path="./_build/gallery"
+
+open _build/gallery/index.html_
+```
+
+
 ## Contributing
 
 1. Download the project.
