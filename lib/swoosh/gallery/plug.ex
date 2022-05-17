@@ -1,7 +1,7 @@
 defmodule Swoosh.Gallery.Plug do
   @moduledoc """
   Plug to mount a `Swoosh.Gallery` into an existing Phoenix/Plug application. Gallery themselves
-  will forward `init/1` and `call/2` to this dmoule, so users don't need to use it directly.
+  will forward `init/1` and `call/2` to this module, so users don't need to use it directly.
 
   ## Examples
 

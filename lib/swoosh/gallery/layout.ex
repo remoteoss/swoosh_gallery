@@ -5,7 +5,6 @@ defmodule Swoosh.Gallery.Layout do
   """
 
   alias Swoosh.Email.Render
-  alias Swoosh.Gallery
   require EEx
 
   @external_resource index_file = Path.join([__DIR__, "templates", "index.html.eex"])
@@ -27,14 +26,12 @@ defmodule Swoosh.Gallery.Layout do
   """
   @spec render(atom, keyword) :: binary
   def render(gallery, assigns \\ []) do
-    previews = Gallery.eval_details(gallery.previews)
-
     ungrouped_previews =
-      previews
+      gallery.previews
       |> ungrouped_previews()
       |> sort_by_title()
 
-    groups = grouped_previews(gallery.groups, previews)
+    groups = grouped_previews(gallery.groups, gallery.previews)
 
     assigns
     |> Keyword.put(:ungrouped_previews, ungrouped_previews)

@@ -92,7 +92,7 @@ defmodule Swoosh.Gallery do
       @group_path nil
 
       def init(opts) do
-        Keyword.put(opts, :gallery, __MODULE__)
+        Keyword.put(opts, :gallery, __MODULE__.get())
       end
 
       def call(conn, opts) do
@@ -106,9 +106,10 @@ defmodule Swoosh.Gallery do
   defmacro __before_compile__(_env) do
     quote do
       @doc false
-      def previews, do: @previews
-
-      def groups, do: @groups
+      def get do
+        previews = eval_details(@previews)
+        %{previews: previews, groups: @groups}
+      end
     end
   end
 

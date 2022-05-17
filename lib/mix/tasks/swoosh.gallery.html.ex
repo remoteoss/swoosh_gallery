@@ -60,7 +60,7 @@ defmodule Mix.Tasks.Swoosh.Gallery.Html do
       |> Module.concat()
       |> Code.ensure_compiled!()
       |> tap(fn mod ->
-        unless function_exported?(mod, :previews, 0) do
+        unless function_exported?(mod, :get, 0) do
           Mix.raise("""
           The module #{inspect(mod)} is not a valid gallery. Make sure it uses Swoosh.Gallery:
 
@@ -72,13 +72,14 @@ defmodule Mix.Tasks.Swoosh.Gallery.Html do
           """)
         end
       end)
-      |> tap(&ensure_required_functions!(&1.previews))
+      |> then(& &1.get())
+      |> tap(&ensure_required_functions!(&1))
     else
       Mix.raise("No gallery available. Please pass a gallery with the --gallery option")
     end
   end
 
-  defp ensure_required_functions!(previews) when is_list(previews) do
+  defp ensure_required_functions!(%{previews: previews}) when is_list(previews) do
     Enum.each(previews, fn %{email_mfa: {module, _fun, _args}} ->
       ensure_required_functions!(module)
     end)
