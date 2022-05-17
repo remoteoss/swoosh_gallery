@@ -20,14 +20,14 @@ defmodule Mix.Tasks.Swoosh.Gallery.HtmlTest do
     assert File.dir?(tmp_dir)
 
     assert sorted_ls!(tmp_dir) == [
+             "auth.reset_password",
+             "auth.reset_password.html",
              "index.html",
-             "reset_password",
-             "reset_password.html",
              "welcome",
              "welcome.html"
            ]
 
-    assert sorted_ls!("#{tmp_dir}/reset_password") == ["preview.html"]
+    assert sorted_ls!("#{tmp_dir}/auth.reset_password") == ["preview.html"]
     assert sorted_ls!("#{tmp_dir}/welcome") == ["attachments", "preview.html"]
     assert sorted_ls!("#{tmp_dir}/welcome/attachments") == ["0"]
     assert sorted_ls!("#{tmp_dir}/welcome/attachments/0") == ["my_file.txt"]
@@ -44,7 +44,7 @@ defmodule Mix.Tasks.Swoosh.Gallery.HtmlTest do
     test "has links to the previews", %{tmp_dir: tmp_dir} do
       run_task(Support.Gallery, tmp_dir)
       contents = File.read!("#{tmp_dir}/index.html")
-      assert contents =~ "a href=\"./reset_password.html\""
+      assert contents =~ "a href=\"./auth.reset_password.html\""
       assert contents =~ "a href=\"./welcome.html\""
     end
 
@@ -58,7 +58,7 @@ defmodule Mix.Tasks.Swoosh.Gallery.HtmlTest do
 
     test "accessing a preview shows the email as text", %{tmp_dir: tmp_dir} do
       run_task(Support.Gallery, tmp_dir)
-      contents = File.read!("#{tmp_dir}/reset_password.html")
+      contents = File.read!("#{tmp_dir}/auth.reset_password.html")
       assert contents =~ "Reset Password"
       assert contents =~ "Sends instructions on how to reset password"
       assert contents =~ "passwords: yes"
@@ -67,7 +67,7 @@ defmodule Mix.Tasks.Swoosh.Gallery.HtmlTest do
 
     test "accessing a preview.html shows the email as html", %{tmp_dir: tmp_dir} do
       run_task(Support.Gallery, tmp_dir)
-      contents = File.read!("#{tmp_dir}/reset_password/preview.html")
+      contents = File.read!("#{tmp_dir}/auth.reset_password/preview.html")
 
       assert contents ==
                "Please, reset your password <a href=\"http://reset.pw\">here</a>."

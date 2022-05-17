@@ -8,30 +8,33 @@ defmodule Swoosh.GalleryTest do
 
   describe "previews/0" do
     test "returns the list of previews" do
-      assert previews = Support.Gallery.previews()
+      assert previews = Support.Gallery.get()
 
-      assert [
-               %{
-                 preview_details: %{
-                   description: "Sends instructions on how to reset password",
-                   tags: [passwords: "yes"],
-                   title: "Reset Password"
+      assert %{
+               previews: [
+                 %{
+                   preview_details: %{
+                     description: "Sends instructions on how to reset password",
+                     tags: [passwords: "yes"],
+                     title: "Reset Password"
+                   },
+                   path: "auth.reset_password",
+                   email_mfa: {Support.Emails.ResetPasswordEmail, :preview, []},
+                   group: "auth"
                  },
-                 path: "reset_password",
-                 email_mfa: {Support.Emails.ResetPasswordEmail, :preview, []},
-                 group: nil
-               },
-               %{
-                 preview_details: %{
-                   description: "Sends a warm welcome to the user",
-                   tags: [attachments: "yes"],
-                   title: "Welcome"
-                 },
-                 path: "welcome",
-                 email_mfa: {Support.Emails.WelcomeEmail, :preview, []},
-                 group: nil
-               }
-             ] == previews
+                 %{
+                   preview_details: %{
+                     description: "Sends a warm welcome to the user",
+                     tags: [attachments: "yes"],
+                     title: "Welcome"
+                   },
+                   path: "welcome",
+                   email_mfa: {Support.Emails.WelcomeEmail, :preview, []},
+                   group: nil
+                 }
+               ],
+               groups: [%{path: "auth", title: "Auth"}]
+             } = previews
     end
   end
 
@@ -46,7 +49,7 @@ defmodule Swoosh.GalleryTest do
     test "has links to the previews" do
       response = Router.call(conn(:get, "/gallery"), [])
       assert response.status == 200
-      assert response.resp_body =~ "a href=\"/gallery/reset_password\""
+      assert response.resp_body =~ "a href=\"/gallery/auth.reset_password\""
       assert response.resp_body =~ "a href=\"/gallery/welcome\""
     end
 
@@ -59,7 +62,7 @@ defmodule Swoosh.GalleryTest do
     end
 
     test "accessing a preview shows the email as text" do
-      response = Router.call(conn(:get, "/gallery/reset_password"), [])
+      response = Router.call(conn(:get, "/gallery/auth.reset_password"), [])
       assert response.status == 200
       assert response.resp_body =~ "Reset Password"
       assert response.resp_body =~ "Sends instructions on how to reset password"
@@ -68,7 +71,7 @@ defmodule Swoosh.GalleryTest do
     end
 
     test "accessing a preview.html shows the email as html" do
-      response = Router.call(conn(:get, "/gallery/reset_password/preview.html"), [])
+      response = Router.call(conn(:get, "/gallery/auth.reset_password/preview.html"), [])
       assert response.status == 200
 
       assert response.resp_body ==
