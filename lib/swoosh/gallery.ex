@@ -209,7 +209,7 @@ defmodule Swoosh.Gallery do
   # Evaluates preview details. It loads the results of preview_details into the
   # preview_details property.
   @doc false
-  @spec eval_preview(
+  @spec eval_details(
           %{:details_mfa => {module(), atom(), list()}}
           | list(%{:details_mfa => {module(), atom(), list()}})
         ) :: map()
