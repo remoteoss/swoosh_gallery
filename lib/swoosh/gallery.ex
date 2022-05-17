@@ -188,7 +188,7 @@ defmodule Swoosh.Gallery do
     end
   end
 
-  # Evaluates a preview. It loads the results of email_mfa and preview_details into the email
+  # Evaluates a preview. It loads the results of email_mfa and details_mfa into the email
   # and preview_details properties respectively.
   @doc false
   @spec eval_preview(%{
@@ -207,7 +207,7 @@ defmodule Swoosh.Gallery do
     Map.put(preview, :email, apply(module, fun, opts))
   end
 
-  # Evaluates preview details. It loads the results of preview_details into the
+  # Evaluates preview details. It loads the results of details_mfa into the
   # preview_details property.
   @doc false
   @spec eval_details(
