@@ -23,7 +23,7 @@ be found at <https://hexdocs.pm/swoosh_gallery>.
 
 ## Sample application
 
-You can see Swoosh.Gallery in action with the Phoenix app included on `./sample`:
+You can see `Swoosh.Gallery` in action with the Phoenix app included in `./sample`:
 
 1. Run `mix do deps.get, phx.server`
 2. Go to `http://localhost:4000/dev/emails`
@@ -31,7 +31,7 @@ You can see Swoosh.Gallery in action with the Phoenix app included on `./sample`
 
 ### Static gallery
 
-You can also generate static HTML files for you Gallery. This is useful when you want to expose the gallery without the need of a server.
+You can also generate static HTML files for your `Gallery`. This is useful when you want to view the gallery without needing to run a server.
 
 ```bash
 mix swoosh.gallery.html --gallery Sample.Gallery --path="./_build/gallery"
@@ -45,4 +45,4 @@ open _build/gallery/index.html_
 1. Download the project.
 2. Run `mix do deps.get, tailwind.install`
 3. Make some changes.
-4. If you need add new tailwind styles, run `mix tailwind default`.
+4. If you need to add new tailwind styles, run `mix tailwind.default`.
