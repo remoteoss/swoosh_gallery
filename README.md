@@ -1,6 +1,6 @@
 # Swoosh Gallery
 
-Preview and display your Swoosh mailers to everyone. 
+Preview and display your [Swoosh](https://github.com/swoosh/swoosh) mailers to everyone. 
 
 ![](assets/docs/screenshot.png)
 
