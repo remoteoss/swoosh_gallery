@@ -83,7 +83,7 @@
               <%= render_preview preview: @preview, base_path: @base_path %>
             <% else %>
               <%= for %{title: title, previews: previews} <- @groups do %>
-              <%= render_table title: "#{title} Email Previews", previews: previews, base_path: @base_path, format: @format %>
+              <%= render_table title: "#{title}", previews: previews, base_path: @base_path, format: @format %>
               <% end %>
 
               <%= render_table title: "Email Previews", previews: @ungrouped_previews, base_path: @base_path, format: @format %>
