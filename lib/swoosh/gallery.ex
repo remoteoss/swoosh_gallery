@@ -188,13 +188,19 @@ defmodule Swoosh.Gallery do
     end
   end
 
+  @type preview() :: %{
+          :details_mfa => {module(), atom(), list()},
+          optional(:email) => Swoosh.Email.t(),
+          :email_mfa => {module(), atom(), list()},
+          :group => String.t() | nil,
+          :path => String.t(),
+          optional(:preview_details) => map()
+        }
+
   # Evaluates a preview. It loads the results of email_mfa and details_mfa into the email
   # and preview_details properties respectively.
   @doc false
-  @spec eval_preview(%{
-          :email_mfa => {module(), atom(), list()},
-          :details_mfa => {module(), atom(), list()}
-        }) :: map()
+  @spec eval_preview(preview()) :: map() | list()
   def eval_preview(%{email: _email} = preview), do: preview
 
   def eval_preview(preview) do
@@ -210,10 +216,7 @@ defmodule Swoosh.Gallery do
   # Evaluates preview details. It loads the results of details_mfa into the
   # preview_details property.
   @doc false
-  @spec eval_details(
-          %{:details_mfa => {module(), atom(), list()}}
-          | list(%{:details_mfa => {module(), atom(), list()}})
-        ) :: map()
+  @spec eval_details(preview() | list(preview())) :: map() | list()
   def eval_details(%{preview_details: _details} = preview), do: preview
 
   def eval_details(%{details_mfa: {module, fun, opts}} = preview) do
@@ -228,7 +231,7 @@ defmodule Swoosh.Gallery do
 
   # Evaluates a preview and reads the attachment at a given index position.
   @doc false
-  @spec read_email_attachment_at(%{email_mfa: {module, atom, list}}, integer()) ::
+  @spec read_email_attachment_at(preview(), integer()) ::
           {:error, :invalid_attachment | :not_found}
           | {:ok, %{content_type: String.t(), data: any}}
   def read_email_attachment_at(preview, index) do
