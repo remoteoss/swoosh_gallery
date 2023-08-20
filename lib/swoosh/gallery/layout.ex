@@ -29,9 +29,9 @@ defmodule Swoosh.Gallery.Layout do
     ungrouped_previews =
       gallery.previews
       |> ungrouped_previews()
-      |> sort_by_title()
+      |> sort_previews(gallery.sort)
 
-    groups = grouped_previews(gallery.groups, gallery.previews)
+    groups = grouped_previews(gallery.groups, gallery.previews, gallery.sort)
 
     assigns
     |> Keyword.put(:ungrouped_previews, ungrouped_previews)
@@ -71,20 +71,28 @@ defmodule Swoosh.Gallery.Layout do
     Enum.filter(previews, &is_nil(&1.group))
   end
 
-  defp sort_by_title(previews) when is_list(previews) do
-    Enum.sort_by(previews, fn %{preview_details: %{title: title}} -> title end)
-  end
-
-  defp grouped_previews(groups, previews) do
+  defp grouped_previews(groups, previews, sort) do
     groups
     |> Enum.map(fn group ->
       grouped_previews =
         previews
         |> Enum.filter(fn %{group: path} -> group.path == path end)
-        |> sort_by_title()
+        |> sort_previews(sort)
 
       Map.put(group, :previews, grouped_previews)
     end)
     |> Enum.sort_by(fn %{title: title} -> title end)
+  end
+
+  defp sort_previews(previews, sort_fun) when is_function(sort_fun) do
+    sort_fun.(previews)
+  end
+
+  defp sort_previews(previews, true), do: sort_by_title(previews)
+
+  defp sort_previews(previews, false), do: Enum.reverse(previews)
+
+  defp sort_by_title(previews) when is_list(previews) do
+    Enum.sort_by(previews, fn %{preview_details: %{title: title}} -> title end)
   end
 end
