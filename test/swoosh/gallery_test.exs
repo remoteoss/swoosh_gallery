@@ -38,6 +38,22 @@ defmodule Swoosh.GalleryTest do
     end
   end
 
+  describe "sort option" do
+    test "when is not set, returns the default true" do
+      assert %{sort: true} = Support.Gallery.get()
+    end
+
+    test "when is set to false, returns false" do
+      assert %{sort: false} = Support.GallerySortFalse.get()
+    end
+
+    test "when is set to a function, returns the function" do
+      assert %{sort: sort_function} = Support.GallerySortIsAFunction.get()
+      assert is_function(sort_function)
+      assert "#{inspect(sort_function)}" == "&Support.GallerySortIsAFunction.sort/1"
+    end
+  end
+
   describe "Gallery plug" do
     test "lists preview titles" do
       response = Router.call(conn(:get, "/gallery"), [])
