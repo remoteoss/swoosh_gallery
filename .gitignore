@@ -24,3 +24,6 @@ swoosh_gallery-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# If you run "mix dialyzer", PLT files will be written to this directory.
+/.dialyzer/

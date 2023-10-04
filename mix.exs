@@ -10,6 +10,7 @@ defmodule SwooshGallery.MixProject do
       description: "Preview and display your Swoosh mailers to everyone",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
+      dialyzer: dialyzer(),
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
@@ -32,7 +33,8 @@ defmodule SwooshGallery.MixProject do
       {:swoosh, "~> 1.5"},
       {:ex_doc, "~> 0.21", only: [:dev, :test], runtime: false},
       {:hackney, "~> 1.9", only: [:test]},
-      {:tailwind, "~> 0.1", only: [:dev, :test]}
+      {:tailwind, "~> 0.1", only: [:dev, :test]},
+      {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -49,6 +51,14 @@ defmodule SwooshGallery.MixProject do
       maintainers: ["Remote"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/remoteoss/swoosh_gallery"}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_apps: [:mix],
+      plt_file:
+        {:no_warn, ".dialyzer/elixir-#{System.version()}-erlang-otp-#{System.otp_release()}.plt"}
     ]
   end
 end
