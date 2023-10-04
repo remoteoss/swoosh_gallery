@@ -97,7 +97,7 @@ defmodule Swoosh.Gallery do
 
         # Good - uses in memory structs and existing fixtures
         def preview do
-          blob = File.read!("#{Application.app_dir(:tiger, "my_app")}/fixtures/sample.pdf")
+          blob = File.read!("#{Application.app_dir(:my_app, "my_app")}/fixtures/sample.pdf")
           build(%User{}, blob)
         end
       end
