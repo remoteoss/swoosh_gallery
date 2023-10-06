@@ -11,7 +11,7 @@ The package can be installed by adding `swoosh_gallery` to your list of dependen
 ```elixir
 def deps do
   [
-    {:swoosh_gallery, "~> 0.1.0"}
+    {:swoosh_gallery, "~> 0.2.0"}
   ]
 end
 ```
